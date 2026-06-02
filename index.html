@@ -1,928 +1,236 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>O Oráculo da Mulher Magnética</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Georgia', 'Segoe UI', serif;
-            background: linear-gradient(135deg, #6b2f6b 0%, #9d4edd 50%, #d4a574 100%);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            color: white;
-            overflow: auto;
-        }
-
-        .container {
-            max-width: 480px;
-            width: 100%;
-            text-align: center;
-        }
-
-        .header {
-            margin-bottom: 20px;
-        }
-
-        .title {
-            font-size: 28px;
-            font-weight: bold;
-            margin-bottom: 8px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            line-height: 1.2;
-        }
-
-        .subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            font-style: italic;
-        }
-
-        /* MENU DE CATEGORIAS */
-        .menu {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 15px;
-        }
-
-        .menu-intro {
-            font-size: 18px;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .category-btn {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            padding: 14px 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-align: left;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .category-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .category-icon {
-            font-size: 28px;
-            min-width: 35px;
-        }
-
-        .category-text {
-            flex: 1;
-        }
-
-        .category-title {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 3px;
-        }
-
-        .category-desc {
-            font-size: 11px;
-            opacity: 0.8;
-            line-height: 1.3;
-        }
-
-        .random-btn {
-            background: linear-gradient(135deg, #d4a574 0%, #f4c794 100%);
-            color: #6b2f6b;
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-size: 16px;
-            font-weight: bold;
-            margin-top: 8px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .random-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
-        }
-
-        /* CARD DISPLAY */
-        .card-section {
-            display: none;
-        }
-
-        .card-section.active {
-            display: block;
-        }
-
-        .card-container {
-            perspective: 1000px;
-            margin: 20px 0;
-            min-height: 480px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 380px;
-            height: 520px;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-            cursor: pointer;
-        }
-
-        .card.flipped {
-            transform: rotateY(180deg);
-        }
-
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 35px 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-front {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 240, 250, 0.95) 100%);
-            color: #6b2f6b;
-        }
-
-        .card-back {
-            background: linear-gradient(135deg, rgba(107, 47, 107, 0.95) 0%, rgba(157, 78, 221, 0.95) 100%);
-            color: white;
-            transform: rotateY(180deg);
-        }
-
-        .card-category {
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0.7;
-            margin-bottom: 18px;
-            font-weight: 600;
-        }
-
-        .card-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .card-question {
-            font-size: 22px;
-            font-weight: bold;
-            line-height: 1.3;
-            margin-bottom: 18px;
-            text-align: center;
-        }
-
-        .card-answer {
-            font-size: 15px;
-            line-height: 1.55;
-            text-align: left;
-            white-space: pre-line;
-        }
-
-        .card-tip {
-            font-size: 12px;
-            margin-top: 18px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            font-style: italic;
-        }
-
-        .card-instruction {
-            font-size: 13px;
-            opacity: 0.6;
-            margin-top: 18px;
-        }
-
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 18px;
-        }
-
-        .btn {
-            padding: 14px 28px;
-            font-size: 15px;
-            font-weight: bold;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            transition: all 0.3s;
-            font-family: 'Georgia', serif;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #d4a574 0%, #f4c794 100%);
-            color: #6b2f6b;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
-        }
-
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            border: 2px solid white;
-        }
-
-        .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-2px);
-        }
-
-        .btn-back {
-            background: rgba(255, 255, 255, 0.15);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            font-size: 13px;
-            padding: 11px 22px;
-        }
-
-        .counter {
-            margin-top: 12px;
-            font-size: 13px;
-            opacity: 0.8;
-        }
-
-        /* RODAPÉ */
-        .footer {
-            margin-top: 30px;
-            padding: 20px;
-            text-align: center;
-            font-size: 12px;
-            opacity: 0.9;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-        }
-
-        .footer-text {
-            margin-bottom: 8px;
-            white-space: nowrap;
-        }
-
-        .footer-email {
-            font-size: 13px;
-            color: #f4c794;
-            font-weight: 600;
-        }
-
-        /* AJUSTES RESPONSIVOS */
-        @media (max-height: 750px) {
-            .header {
-                margin-bottom: 15px;
-            }
-            .title {
-                font-size: 24px;
-            }
-            .menu {
-                gap: 8px;
-                margin-top: 12px;
-            }
-            .menu-intro {
-                font-size: 16px;
-                margin-bottom: 10px;
-            }
-            .category-btn {
-                padding: 12px 14px;
-            }
-            .category-icon {
-                font-size: 24px;
-            }
-            .category-title {
-                font-size: 15px;
-            }
-            .category-desc {
-                font-size: 10px;
-            }
-            .random-btn {
-                padding: 14px;
-                font-size: 15px;
-                margin-top: 6px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .title {
-                font-size: 24px;
-            }
-            .category-title {
-                font-size: 15px;
-            }
-            .card {
-                height: 480px;
-            }
-            .card-question {
-                font-size: 20px;
-            }
-            .card-answer {
-                font-size: 14px;
-            }
-        }
-
-        @media (max-height: 650px) {
-            .title {
-                font-size: 22px;
-                margin-bottom: 6px;
-            }
-            .subtitle {
-                font-size: 12px;
-            }
-            .header {
-                margin-bottom: 10px;
-            }
-            .menu {
-                gap: 7px;
-                margin-top: 10px;
-            }
-            .menu-intro {
-                font-size: 15px;
-                margin-bottom: 8px;
-            }
-            .category-btn {
-                padding: 10px 12px;
-            }
-            .category-icon {
-                font-size: 22px;
-                min-width: 30px;
-            }
-            .category-title {
-                font-size: 14px;
-            }
-            .category-desc {
-                font-size: 10px;
-            }
-            .random-btn {
-                padding: 12px;
-                font-size: 14px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conexão com os 7 Arcanjos</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#faf9f7;color:#1a1a1a;min-height:100vh}
+.hero{text-align:center;padding:3rem 1rem 2rem;background:#fff;border-bottom:1px solid #eee}
+.hero-icon{font-size:40px;margin-bottom:1rem}
+.hero h1{font-size:26px;font-weight:600;margin-bottom:.5rem;color:#1a1a1a}
+.hero p{font-size:15px;color:#666;max-width:480px;margin:0 auto}
+.tabs{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:1.25rem 1rem;background:#fff;border-bottom:1px solid #eee;position:sticky;top:0;z-index:10}
+.tab{padding:8px 20px;border-radius:999px;font-size:13px;font-weight:500;border:1px solid #ddd;background:transparent;color:#666;cursor:pointer;transition:all .15s}
+.tab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.section{display:none;padding:1.5rem 1rem 3rem;max-width:760px;margin:0 auto}
+.section.active{display:block}
+.arc-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-bottom:1.5rem}
+.arc-card{background:#fff;border:1.5px solid #eee;border-radius:14px;padding:1rem;cursor:pointer;transition:all .15s}
+.arc-card:hover{border-color:#bbb;transform:translateY(-1px)}
+.arc-card.selected{border-width:2px}
+.arc-dot{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:.5rem}
+.arc-name{font-size:15px;font-weight:600;color:#1a1a1a}
+.arc-day{font-size:12px;color:#888;margin-top:2px}
+.arc-virtue{font-size:11px;font-weight:600;margin-top:8px;padding:3px 10px;border-radius:999px;display:inline-block;letter-spacing:.03em}
+.detail-panel{background:#fff;border:1px solid #eee;border-radius:16px;padding:1.5rem}
+.detail-header{display:flex;align-items:center;gap:14px;margin-bottom:1.25rem}
+.detail-dot{width:54px;height:54px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0}
+.detail-title{font-size:20px;font-weight:600;color:#1a1a1a}
+.detail-subtitle{font-size:13px;color:#888;margin-top:3px}
+.dtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.25rem}
+.dtab{padding:6px 14px;border-radius:999px;font-size:12px;border:1px solid #ddd;background:transparent;color:#666;cursor:pointer;transition:all .15s}
+.dtab.active{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.dbody{font-size:14px;color:#1a1a1a;line-height:1.7}
+.dbody h3{font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;margin-top:1.25rem}
+.dbody h3:first-child{margin-top:0}
+.vtags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.5rem}
+.vtag{font-size:12px;padding:4px 12px;border-radius:999px;border:1px solid #e5e5e5;color:#555;background:#fafafa}
+.oracao{background:#f8f8f6;border-radius:10px;padding:1rem 1.25rem;font-size:13px;line-height:1.9;color:#1a1a1a;border-left:3px solid;margin-top:.5rem;white-space:pre-line}
+.banho-step{display:flex;gap:10px;align-items:flex-start;margin-bottom:.75rem}
+.step-n{width:22px;height:22px;border-radius:50%;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#666;flex-shrink:0;margin-top:1px}
+.ipill{display:inline-block;background:#f5f5f5;border-radius:999px;padding:4px 12px;font-size:12px;margin:3px 4px 3px 0;color:#333}
+.crystals{display:flex;flex-wrap:wrap;gap:8px;margin-top:.5rem}
+.crystal{background:#f8f8f6;border-radius:10px;padding:.6rem .9rem;font-size:12px;flex:1;min-width:130px}
+.crystal-n{font-weight:600;margin-bottom:2px;color:#1a1a1a}
+.crystal-d{color:#777;font-size:11px}
+.ensinamento{font-style:italic;border-left:3px solid;padding:1rem 1.25rem;border-radius:0 10px 10px 0;background:#f8f8f6;font-size:14px;line-height:1.8}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-bottom:1.25rem}
+.cal-day{background:#fff;border:1.5px solid #eee;border-radius:12px;padding:.75rem .5rem;text-align:center;cursor:pointer;transition:all .15s}
+.cal-day:hover{border-color:#bbb}
+.cal-day.today{border-width:2px}
+.cal-emoji{font-size:20px;margin-bottom:3px}
+.cal-dn{font-size:10px;color:#999;margin-bottom:2px}
+.cal-an{font-size:11px;font-weight:600;color:#1a1a1a}
+.cal-cor{font-size:10px;color:#aaa;margin-top:2px}
+.cal-detail{background:#fff;border:1px solid #eee;border-radius:16px;padding:1.25rem}
+.today-badge{font-size:11px;padding:3px 10px;border-radius:999px;background:#e8f5e9;color:#2e7d32;font-weight:600}
+.guide-card{background:#fff;border:1px solid #eee;border-radius:12px;padding:1rem 1.25rem;margin-bottom:.75rem}
+.guide-card p{font-size:14px;color:#333;line-height:1.75}
+.step-item{display:flex;gap:12px;margin-bottom:.9rem;align-items:flex-start}
+.step-circle{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;margin-top:1px}
+.choose-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.choose-card{background:#fff;border:1px solid #eee;border-radius:12px;padding:.75rem 1rem}
+.choose-arc{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:4px}
+.choose-when{font-size:12px;color:#777;line-height:1.6}
+.section-title{font-size:17px;font-weight:600;color:#1a1a1a;margin-bottom:.75rem;margin-top:1.5rem}
+.section-title:first-child{margin-top:0}
+@media(max-width:480px){
+  .cal-grid{grid-template-columns:repeat(4,1fr)}
+  .arc-grid{grid-template-columns:repeat(2,1fr)}
+  .cal-dn{display:none}
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="title">🔮 O Oráculo da<br>Mulher Magnética</div>
-            <div class="subtitle">Consulte a Sabedoria nos Momentos de Dúvida</div>
-        </div>
 
-        <!-- MENU DE CATEGORIAS -->
-        <div id="menu" class="menu">
-            <div class="menu-intro">✨ Escolha Sua Consulta ✨</div>
+<div class="hero">
+  <div class="hero-icon">✦</div>
+  <h1>Conexão com os 7 Arcanjos</h1>
+  <p>Guia completo de proteção, cura, prosperidade e evolução espiritual</p>
+</div>
 
-            <div class="category-btn" onclick="selectCategory(0)">
-                <div class="category-icon">📱</div>
-                <div class="category-text">
-                    <div class="category-title">Ele Mandou Mensagem</div>
-                    <div class="category-desc">O que fazer quando ele voltar a falar</div>
-                </div>
-            </div>
+<div class="tabs">
+  <button class="tab active" onclick="showSection('arcanjos',this)">Os 7 Arcanjos</button>
+  <button class="tab" onclick="showSection('calendario',this)">Calendário Sagrado</button>
+  <button class="tab" onclick="showSection('guia',this)">Como Praticar</button>
+</div>
 
-            <div class="category-btn" onclick="selectCategory(1)">
-                <div class="category-icon">🔍</div>
-                <div class="category-text">
-                    <div class="category-title">O Que Ele Está Pensando?</div>
-                    <div class="category-desc">Decifrando os sinais de interesse</div>
-                </div>
-            </div>
+<div id="arcanjos" class="section active">
+  <div class="arc-grid" id="arcGrid"></div>
+  <div class="detail-panel" id="detailPanel"></div>
+</div>
 
-            <div class="category-btn" onclick="selectCategory(2)">
-                <div class="category-icon">😰</div>
-                <div class="category-text">
-                    <div class="category-title">Socorro, Estou Surtando!</div>
-                    <div class="category-desc">Controle emocional nos momentos difíceis</div>
-                </div>
-            </div>
+<div id="calendario" class="section">
+  <div class="cal-grid" id="calGrid"></div>
+  <div id="calDetail"></div>
+</div>
 
-            <div class="category-btn" onclick="selectCategory(3)">
-                <div class="category-icon">💬</div>
-                <div class="category-text">
-                    <div class="category-title">O Que Eu Respondo?</div>
-                    <div class="category-desc">Scripts prontos para cada situação</div>
-                </div>
-            </div>
+<div id="guia" class="section">
+  <p class="section-title">A grande verdade sobre os Arcanjos</p>
+  <div class="guide-card"><p>Os Arcanjos funcionam como <strong>frequências espirituais universais</strong> — estados elevados de consciência que podem ser despertados dentro de nós. Quando invocamos Miguel, despertamos nossa coragem. Quando invocamos Rafael, despertamos nosso potencial de cura.</p></div>
+  <div class="guide-card" style="background:#faf9f7"><p>O objetivo não é criar dependência espiritual. É ajudá-lo a <em>lembrar da luz que já existe dentro de você</em>. Os Arcanjos não vieram para substituir o seu poder — vieram para ajudá-lo a reconhecê-lo.</p></div>
 
-            <div class="category-btn" onclick="selectCategory(4)">
-                <div class="category-icon">💎</div>
-                <div class="category-text">
-                    <div class="category-title">Preciso de Força Interior</div>
-                    <div class="category-desc">Afirmações de poder e magnetismo</div>
-                </div>
-            </div>
+  <p class="section-title">O método dos 3 passos</p>
+  <div class="step-item"><div class="step-circle" style="background:#E6F1FB;color:#185FA5">1</div><div><div style="font-size:14px;font-weight:600;margin-bottom:2px">Autorize a presença</div><div style="font-size:13px;color:#666">"Arcanjo [Nome], eu invoco sua presença amorosa e autorizo sua atuação em minha vida."</div></div></div>
+  <div class="step-item"><div class="step-circle" style="background:#E1F5EE;color:#0F6E56">2</div><div><div style="font-size:14px;font-weight:600;margin-bottom:2px">Seja honesto</div><div style="font-size:13px;color:#666">Fale exatamente o que está sentindo. Sem palavras difíceis. A sinceridade é a linguagem universal da alma.</div></div></div>
+  <div class="step-item"><div class="step-circle" style="background:#EEEDFE;color:#534AB7">3</div><div><div style="font-size:14px;font-weight:600;margin-bottom:2px">Entregue e confie</div><div style="font-size:13px;color:#666">Após expressar sua necessidade, solte o controle. A confiança é uma das maiores demonstrações de fé.</div></div></div>
 
-            <button class="random-btn" onclick="drawRandomCard()">
-                🎲 Puxar Card Totalmente Aleatório
-            </button>
-        </div>
+  <p class="section-title">Como reconhecer os sinais</p>
+  <div class="choose-grid">
+    <div class="choose-card"><div class="choose-arc">🕊 Paz repentina</div><div class="choose-when">Um alívio interior sem que nada tenha mudado externamente.</div></div>
+    <div class="choose-card"><div class="choose-arc">💡 Clareza mental</div><div class="choose-when">Uma solução surge. Um caminho se torna evidente.</div></div>
+    <div class="choose-card"><div class="choose-arc">🔗 Sincronicidades</div><div class="choose-when">Coincidências significativas que parecem carregar uma mensagem.</div></div>
+    <div class="choose-card"><div class="choose-arc">🌙 Sonhos vívidos</div><div class="choose-when">Após períodos de oração ou meditação, sensação de paz e direção.</div></div>
+    <div class="choose-card"><div class="choose-arc">🤝 Pessoas enviadas</div><div class="choose-when">Um conselho, uma oportunidade, uma conversa comum.</div></div>
+    <div class="choose-card"><div class="choose-arc">✦ O sinal verdadeiro</div><div class="choose-when">Traz paz, surge espontaneamente e gera conforto.</div></div>
+  </div>
 
-        <!-- SEÇÃO DO CARD -->
-        <div id="card-section" class="card-section">
-            <div class="card-container">
-                <div class="card" id="flashcard" onclick="flipCard()">
-                    <div class="card-face card-front">
-                        <div class="card-category" id="category-front"></div>
-                        <div class="card-icon" id="icon-front"></div>
-                        <div class="card-question" id="question"></div>
-                        <div class="card-instruction">👆 Clique para revelar a resposta</div>
-                    </div>
-                    <div class="card-face card-back">
-                        <div class="card-category" id="category-back"></div>
-                        <div class="card-answer" id="answer"></div>
-                        <div class="card-tip" id="tip"></div>
-                    </div>
-                </div>
-            </div>
+  <p class="section-title" style="margin-top:1.5rem">Prática diária — ao acordar</p>
+  <div class="guide-card" style="background:#faf9f7">
+    <div class="step-item" style="margin-bottom:.5rem"><div class="step-n">1</div><div style="font-size:13px">Arrume seu ambiente</div></div>
+    <div class="step-item" style="margin-bottom:.5rem"><div class="step-n">2</div><div style="font-size:13px">Acenda uma vela (opcional)</div></div>
+    <div class="step-item" style="margin-bottom:.5rem"><div class="step-n">3</div><div style="font-size:13px">Segure o cristal correspondente ao dia</div></div>
+    <div class="step-item" style="margin-bottom:.5rem"><div class="step-n">4</div><div style="font-size:13px">Faça uma respiração profunda</div></div>
+    <div class="step-item" style="margin-bottom:.5rem"><div class="step-n">5</div><div style="font-size:13px">Recite a afirmação ou decreto do dia</div></div>
+    <div class="step-item" style="margin-bottom:0"><div class="step-n">6</div><div style="font-size:13px">Permaneça alguns minutos em silêncio</div></div>
+  </div>
+  <p style="font-size:12px;color:#aaa;margin-top:.5rem">Cinco minutos de presença valem mais do que uma hora de distração.</p>
+</div>
 
-            <div class="button-container">
-                <button class="btn btn-primary" onclick="drawFromCurrentCategory()">
-                    🎲 Outro Card Desta Categoria
-                </button>
-                <button class="btn btn-secondary" onclick="flipCard()">
-                    🔄 Virar Card
-                </button>
-                <button class="btn btn-back" onclick="backToMenu()">
-                    ← Voltar ao Menu
-                </button>
-            </div>
+<script>
+const arcs=[
+  {id:'miguel',name:'Miguel',day:'Domingo',raio:'Azul',emoji:'⚔️',virtue:'Proteção',bg:'#E6F1FB',border:'#185FA5',text:'#0C447C',vbg:'#B5D4F4',desc:'O Guardião da Proteção Divina. Seu nome significa "Quem como Deus?" Representa a força espiritual capaz de dissipar o medo, fortalecer a fé e proteger aqueles que atravessam períodos difíceis.',quando:['Medo e insegurança','Ataques energéticos','Sensação de vulnerabilidade','Conflitos','Desânimo','Falta de confiança','Períodos de grandes mudanças'],virtudes:['Proteção','Coragem','Fé','Força de vontade','Libertação de energias negativas'],cristais:[{n:'Cianita Azul',d:'Proteção energética, limites saudáveis, cortar influências negativas'},{n:'Quartzo Azul',d:'Paz interior, coragem e fortalecimento emocional'}],incensos:['Mirra','Cravo-da-Índia'],afirmacao:'Arcanjo Miguel, envolve-me com tua luz azul de proteção. Fortalece minha fé, minha coragem e minha confiança. Que nenhuma energia contrária ao amor encontre espaço em minha vida.',decreto:'Em nome da Divina Presença Eu Sou, eu invoco o Arcanjo Miguel e sua poderosa espada de chama azul.\n\nCorta e liberta, corta e liberta, corta e liberta todo padrão de medo, insegurança e negatividade presente em minha vida.\n\nArcanjo Miguel à minha frente. Atrás de mim. À minha direita. À minha esquerda. Acima de mim. Abaixo de mim.\n\nEstou cercado pela luz azul da proteção divina.\n\nEu Sou coragem. Eu Sou força. Eu Sou protegido pela luz.\n\nAssim é. Está feito.',banho:{titulo:'Banho de Proteção e Fortalecimento',ingredientes:['1 litro de água','1 punhado de manjericão','1 pequeno punhado de guiné','3 cravos-da-índia'],mentalizacao:'Estou protegido pela luz azul do Arcanjo Miguel. Todo medo é dissolvido. Toda força retorna ao meu coração.'},ensinamento:'Miguel não entra em sua vida para eliminar todos os desafios. Ele entra para lembrar que você é maior do que eles. A verdadeira proteção acontece quando você descobre que possui força suficiente para atravessá-los.'},
+  {id:'jofiel',name:'Jofiel',day:'Segunda',raio:'Amarelo Dourado',emoji:'☀️',virtue:'Sabedoria',bg:'#FAEEDA',border:'#BA7517',text:'#854F0B',vbg:'#FAC775',desc:'O Iluminador da Sabedoria Divina. Seu nome significa "Beleza de Deus". Sua energia está associada à iluminação da mente, expansão da consciência e capacidade de enxergar soluções onde antes existiam apenas problemas.',quando:['Confusão mental','Falta de foco','Estudos difíceis','Decisões importantes','Bloqueios criativos','Mente sobrecarregada'],virtudes:['Sabedoria','Clareza mental','Criatividade','Discernimento','Iluminação'],cristais:[{n:'Citrino',d:'Expansão mental, confiança e inteligência prática'},{n:'Calcita Amarela',d:'Aprendizado e assimilação de conhecimento'},{n:'Olho de Tigre',d:'Discernimento, foco e segurança nas decisões'}],incensos:['Canela','Alecrim'],afirmacao:'Arcanjo Jofiel, ilumina minha mente com a sabedoria divina. Que eu enxergue claramente os caminhos diante de mim e tome decisões alinhadas com meu propósito.',decreto:'Arcanjo Jofiel, anjo da iluminação e da sabedoria divina, derrama sobre mim tua chama dourada.\n\nQue toda confusão seja dissolvida. Que toda dúvida seja transformada em compreensão. Que minha mente seja iluminada pela inteligência divina.\n\nEu Sou a clareza. Eu Sou o discernimento. Eu Sou a sabedoria em ação.\n\nCada escolha que faço é guiada pela luz. Cada pensamento se alinha com a verdade.\n\nAssim é. Está feito.',banho:{titulo:'Banho para Clareza Mental e Sabedoria',ingredientes:['1 litro de água','1 punhado de alecrim','1 punhado de hortelã','Pétalas de rosa amarela ou girassol'],mentalizacao:'Minha mente é iluminada pela sabedoria divina. Vejo com clareza aquilo que preciso compreender.'},ensinamento:'A maioria das respostas que buscamos já existe dentro de nós. O problema é que a mente ansiosa faz muito barulho. Jofiel não traz respostas externas — ele ajuda você a ouvir a sabedoria que já estava presente.'},
+  {id:'chamuel',name:'Chamuel',day:'Terça',raio:'Rosa',emoji:'🌹',virtue:'Amor',bg:'#FBEAF0',border:'#993556',text:'#72243E',vbg:'#F4C0D1',desc:'O Guardião do Amor Divino. Conhecido como o Arcanjo do Amor Incondicional. Sua energia está associada à cura emocional, harmonia dos relacionamentos e ao fortalecimento do amor-próprio.',quando:['Curar mágoas emocionais','Desenvolver amor-próprio','Melhorar relacionamentos','Restaurar a autoestima','Resolver conflitos','Superar rejeições ou perdas afetivas'],virtudes:['Amor divino','Harmonia','Autoestima','Compaixão','Cura emocional'],cristais:[{n:'Quartzo Rosa',d:'O cristal mais associado ao amor, ternura e cura emocional'},{n:'Rodonita',d:'Perdão e harmonização das emoções'}],incensos:['Rosa','Jasmim'],afirmacao:'Arcanjo Chamuel, preenche meu coração com amor, harmonia e paz. Que eu reconheça meu valor e expresse amor em todas as áreas da minha vida.',decreto:'Arcanjo Chamuel, mensageiro do amor divino, envolve meu coração com tua chama rosa de paz e compaixão.\n\nCura todas as feridas emocionais. Dissolve toda sensação de abandono, rejeição ou desamor.\n\nQue eu aprenda a amar a mim mesmo com a mesma ternura com que sou amado pela Fonte Divina.\n\nEu Sou amor. Eu Sou harmonia. Eu Sou paz.\n\nTodos os meus relacionamentos são abençoados pela luz do amor divino.\n\nAssim é. Está feito.',banho:{titulo:'Banho para Amor-Próprio e Harmonia',ingredientes:['1 litro de água','Pétalas de rosa cor-de-rosa','1 punhado de erva-doce','1 colher de hibisco'],mentalizacao:'Eu me abro para o amor. Meu coração é digno de carinho, respeito, paz e felicidade.'},ensinamento:'O amor não começa quando alguém chega. O amor começa quando você deixa de abandonar a si mesmo. Relacionamentos saudáveis florescem naturalmente quando o coração aprende a reconhecer o próprio valor.'},
+  {id:'gabriel',name:'Gabriel',day:'Quarta',raio:'Branco Cristalino',emoji:'🕊️',virtue:'Verdade',bg:'#F1EFE8',border:'#5F5E5A',text:'#444441',vbg:'#D3D1C7',desc:'O Mensageiro da Verdade e dos Novos Começos. O grande mensageiro divino. Sua presença está associada aos momentos em que uma nova direção precisa ser revelada.',quando:['Descobrir seu propósito','Melhorar sua comunicação','Desenvolver a intuição','Receber orientação espiritual','Iniciar novos projetos','Falar sua verdade com confiança'],virtudes:['Pureza','Verdade','Comunicação','Intuição','Propósito de vida'],cristais:[{n:'Selenita',d:'Conexão espiritual e purificação energética'},{n:'Quartzo Transparente',d:'Amplifica intenções e facilita estados meditativos'},{n:'Pedra da Lua',d:'Intuição, sensibilidade e sabedoria interior'}],incensos:['Lírio','Lótus'],afirmacao:'Arcanjo Gabriel, ilumina minha mente e minhas palavras. Que eu reconheça meu propósito e tenha coragem para expressar minha verdade com amor e sabedoria.',decreto:'Arcanjo Gabriel, mensageiro da verdade divina, purifica meus pensamentos, minhas palavras e minhas intenções.\n\nQue toda confusão seja substituída por clareza. Que toda dúvida seja transformada em direção.\n\nAbre meus canais de percepção para que eu possa ouvir a voz da minha alma.\n\nEu Sou a verdade. Eu Sou a clareza. Eu Sou guiado pela sabedoria divina.\n\nMinha voz expressa amor. Meu caminho é iluminado pela luz.\n\nAssim é. Está feito.',banho:{titulo:'Banho para Intuição e Clareza Espiritual',ingredientes:['1 litro de água','Camomila','Folhas de jasmim','Pétalas de rosa branca'],mentalizacao:'Minha mente está limpa. Minha intuição está desperta. Recebo orientação divina com clareza e confiança.'},ensinamento:'Muitas pessoas passam anos procurando respostas fora de si. Gabriel ensina que a verdadeira orientação surge quando aprendemos a silenciar o excesso de ruído. A voz da alma nunca grita — ela apenas sussurra.'},
+  {id:'rafael',name:'Rafael',day:'Quinta',raio:'Verde Esmeralda',emoji:'🌿',virtue:'Cura',bg:'#EAF3DE',border:'#3B6D11',text:'#27500A',vbg:'#C0DD97',desc:'O Médico Celestial. Seu nome significa "Deus Cura". Sua energia está profundamente ligada à restauração, ao equilíbrio e à regeneração. Atua na integração entre corpo, mente e espírito.',quando:['Recuperar energia','Fortalecer a saúde','Superar períodos de estresse','Restaurar o equilíbrio emocional','Apoiar recuperação física','Encontrar paz interior'],virtudes:['Cura','Saúde','Regeneração','Equilíbrio','Vitalidade'],cristais:[{n:'Quartzo Verde',d:'Regeneração e equilíbrio emocional'},{n:'Aventurina Verde',d:'Energia harmonizadora e restauradora'},{n:'Malaquita',d:'Transformação e fortalecimento energético'}],incensos:['Eucalipto','Capim-limão'],afirmacao:'Arcanjo Rafael, envolve-me com tua luz verde de cura. Restaura meu equilíbrio físico, emocional e espiritual. Que cada célula do meu ser seja preenchida com saúde, vitalidade e paz.',decreto:'Arcanjo Rafael, médico celeste e guardião da chama verde da cura, derrama tua luz sobre meu corpo, minha mente e minha alma.\n\nQue toda energia de desequilíbrio seja dissolvida. Que toda tensão seja liberada. Que toda dor encontre o caminho da cura.\n\nRestaura minha vitalidade. Fortalece minha saúde. Harmoniza minhas emoções.\n\nEu Sou saúde. Eu Sou equilíbrio. Eu Sou vitalidade.\n\nAssim é. Está feito.',banho:{titulo:'Banho para Cura e Vitalidade',ingredientes:['1 litro de água','Folhas de eucalipto','Folhas de oliveira','Sálvia'],mentalizacao:'Recebo a luz verde da cura. Meu corpo se fortalece. Minha mente se equilibra. Minha energia vital é restaurada.'},ensinamento:'A cura não é apenas o desaparecimento da dor. A verdadeira cura acontece quando voltamos a viver em harmonia com quem realmente somos. O estado natural da alma é o equilíbrio.'},
+  {id:'uriel',name:'Uriel',day:'Sexta',raio:'Rubi / Laranja',emoji:'🔥',virtue:'Prosperidade',bg:'#FAECE7',border:'#993C1D',text:'#712B13',vbg:'#F5C4B3',desc:'O Guardião da Prosperidade e da Sabedoria Prática. Seu nome significa "Fogo de Deus". Sua frequência está ligada à prosperidade, estabilidade e à sabedoria necessária para transformar inspiração em resultados concretos.',quando:['Melhorar situação financeira','Encontrar novas oportunidades','Resolver problemas materiais','Superar crenças de escassez','Desenvolver disciplina financeira','Encontrar estabilidade emocional'],virtudes:['Prosperidade','Paz material','Segurança','Sabedoria prática','Manifestação'],cristais:[{n:'Cornalina',d:'Ação, confiança e realização'},{n:'Granada',d:'Vitalidade, determinação e sucesso'},{n:'Âmbar',d:'Abundância e energia solar'}],incensos:['Benjoim','Sândalo'],afirmacao:'Arcanjo Uriel, ilumina minha vida com abundância, equilíbrio e sabedoria. Que eu reconheça as oportunidades ao meu redor e utilize meus recursos com consciência.',decreto:'Arcanjo Uriel, guardião da prosperidade divina, derrama tua luz rubi sobre minha vida material.\n\nLiberta-me de todas as crenças de escassez. Dissolve o medo da falta. Abre meus caminhos para oportunidades alinhadas ao meu propósito.\n\nEnsina-me a administrar com sabedoria tudo aquilo que recebo.\n\nEu Sou abundância. Eu Sou prosperidade. Eu Sou sustentado pela inteligência divina do universo.\n\nAssim é. Está feito.',banho:{titulo:'Banho para Prosperidade e Realização',ingredientes:['1 litro de água','3 folhas de louro','1 canela em pau','Flores de calêndula'],mentalizacao:'Abro-me para receber prosperidade, oportunidades e abundância. Caminho com confiança e sabedoria.'},ensinamento:'A prosperidade não nasce da obsessão. Ela nasce da confiança. Quanto mais você vive em guerra com a falta, mais energia entrega à escassez. Abundância não é acumular — é permitir que a vida flua através de você.'},
+  {id:'zadkiel',name:'Zadkiel',day:'Sábado',raio:'Violeta',emoji:'🔮',virtue:'Transmutação',bg:'#EEEDFE',border:'#534AB7',text:'#3C3489',vbg:'#CECBF6',desc:'O Mestre da Chama Violeta. Seu nome está associado à misericórdia, ao perdão e à transmutação espiritual. Sua frequência está ligada à Chama Violeta, símbolo da transformação de energias densas em aprendizado, liberdade e evolução.',quando:['Perdoar alguém','Perdoar a si mesmo','Encerrar ciclos','Libertar ressentimentos','Transformar padrões antigos','Superar arrependimentos','Recomeçar'],virtudes:['Perdão','Misericórdia','Transmutação','Libertação','Transformação espiritual'],cristais:[{n:'Ametista',d:'Espiritualidade, transmutação e paz interior'}],incensos:['Lavanda','Violeta'],afirmacao:'Arcanjo Zadkiel, ajuda-me a libertar tudo aquilo que já não serve ao meu crescimento. Que eu caminhe leve, livre e em paz.',decreto:'Arcanjo Zadkiel, guardião da sagrada chama violeta, envolve meu ser com tua luz transformadora.\n\nTransmuta todo ressentimento. Transmuta toda culpa. Transmuta todo medo.\n\nQue eu seja libertado das correntes invisíveis que me prendem ao passado.\n\nEscolho perdoar. Escolho aprender. Escolho seguir adiante.\n\nEu Sou liberdade. Eu Sou transformação. Eu Sou a chama violeta em ação.\n\nAssim é. Está feito.',banho:{titulo:'Banho para Libertação e Perdão',ingredientes:['1 litro de água','Lavanda ou alfazema','Folhas de boldo','Pétalas violetas ou azuladas'],mentalizacao:'Liberto o passado. Recebo aprendizado. Escolho caminhar em paz.'},ensinamento:'Perdoar não significa concordar. Perdoar significa deixar de carregar um peso que já cumpriu seu propósito. A liberdade começa quando paramos de reviver aquilo que já terminou.'}
+];
 
-            <div class="counter" id="counter"></div>
-        </div>
+let selArc=0,selDtab='virtudes';
 
-        <!-- RODAPÉ -->
-        <div class="footer">
-            <div class="footer-text">O Código da Reconexão Emocional™ Desenvolvido por Aurora ☆ 2025</div>
-            <div class="footer-email">codigoreconexa@gmail.com</div>
-        </div>
+function showSection(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+function renderGrid(){
+  document.getElementById('arcGrid').innerHTML=arcs.map((a,i)=>`
+    <div class="arc-card${i===selArc?' selected':''}" onclick="selArc=${i};selDtab='virtudes';renderGrid();renderDetail()" style="${i===selArc?'border-color:'+a.border:''}">
+      <div class="arc-dot" style="background:${a.bg}">${a.emoji}</div>
+      <div class="arc-name">${a.name}</div>
+      <div class="arc-day">${a.day} · ${a.raio}</div>
+      <div class="arc-virtue" style="background:${a.bg};color:${a.text}">${a.virtue}</div>
+    </div>`).join('');
+}
+
+function renderDetail(){
+  const a=arcs[selArc];
+  const tabs=['virtudes','afirmacao','decreto','banho','ensinamento'];
+  const labels={virtudes:'Virtudes & Cristais',afirmacao:'Afirmação',decreto:'Decreto',banho:'Banho',ensinamento:'Ensinamento'};
+  let body='';
+  if(selDtab==='virtudes'){
+    body=`<h3>Quando trabalhar com ${a.name}</h3><div class="vtags">${a.quando.map(q=>`<span class="vtag">${q}</span>`).join('')}</div>
+    <h3>Raio e virtudes</h3><div class="vtags">${a.virtudes.map(v=>`<span class="vtag" style="background:${a.bg};border-color:${a.bg};color:${a.text}">${v}</span>`).join('')}</div>
+    <h3>Cristais</h3><div class="crystals">${a.cristais.map(c=>`<div class="crystal"><div class="crystal-n">${c.n}</div><div class="crystal-d">${c.d}</div></div>`).join('')}</div>
+    <h3>Incensos</h3><div class="vtags">${a.incensos.map(i=>`<span class="vtag">${i}</span>`).join('')}</div>`;
+  }else if(selDtab==='afirmacao'){
+    body=`<h3>Afirmação de ${a.name}</h3><div class="oracao" style="border-left-color:${a.border}">${a.afirmacao}</div>`;
+  }else if(selDtab==='decreto'){
+    body=`<h3>Decreto de ${a.name}</h3><div class="oracao" style="border-left-color:${a.border}">${a.decreto}</div>`;
+  }else if(selDtab==='banho'){
+    body=`<h3>${a.banho.titulo}</h3>
+    <h3 style="margin-top:.75rem">Ingredientes</h3><div style="margin-bottom:.75rem">${a.banho.ingredientes.map(i=>`<span class="ipill">${i}</span>`).join('')}</div>
+    <h3>Preparo</h3>${['Ferva a água','Desligue o fogo e adicione os ingredientes','Tampe e deixe em infusão por 10 minutos','Coe e reserve','Após o banho de higiene, despeje do pescoço para baixo'].map((s,i)=>`<div class="banho-step"><div class="step-n">${i+1}</div><div style="font-size:13px">${s}</div></div>`).join('')}
+    <h3>Mentalização</h3><div class="oracao" style="border-left-color:${a.border};font-style:italic">${a.banho.mentalizacao}</div>`;
+  }else if(selDtab==='ensinamento'){
+    body=`<div class="ensinamento" style="border-left-color:${a.border}">${a.ensinamento}</div>`;
+  }
+  document.getElementById('detailPanel').innerHTML=`
+    <div class="detail-header">
+      <div class="detail-dot" style="background:${a.bg}">${a.emoji}</div>
+      <div><div class="detail-title">Arcanjo ${a.name}</div><div class="detail-subtitle">${a.day} · Raio ${a.raio} · ${a.virtue}</div></div>
     </div>
+    <div class="dtabs">${tabs.map(t=>`<button class="dtab${t===selDtab?' active':''}" onclick="selDtab='${t}';renderDetail()">${labels[t]}</button>`).join('')}</div>
+    <div class="dbody">${body}</div>`;
+}
 
-    <script>
-        const flashcards = [
-            // CATEGORIA 1: ELE MANDOU MENSAGEM (10 cards)
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "💬",
-                question: "Ele mandou 'oi, sumida'",
-                answer: "✅ RESPOSTA ESTRATÉGICA:\n\nEspere 3 horas no mínimo. Depois responda:\n\n'Oie, tudo bem? Correria por aqui, mas tô ótima! E você?'\n\n🎯 Tom: Leve, feliz, ocupada (não demonstre carência)",
-                tip: "Lembre-se: Quem responde rápido perde o poder. Mostre que você tem uma vida."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "🕐",
-                question: "Ele me chamou pra sair hoje à noite",
-                answer: "✅ SCRIPT DO 'NÃO' PODEROSO:\n\n'Adoraria, mas hoje não consigo! Quem sabe na próxima, se a gente combinar com mais calma? 😊'\n\n🎯 Nunca aceite de primeira. Mostre que você não está 100% disponível.",
-                tip: "Você tem uma agenda. Ele precisa se planejar para estar com você."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "💭",
-                question: "A conversa morreu. Devo puxar assunto?",
-                answer: "❌ NÃO!\n\nDeixe o vácuo agir. Quem encerra a conversa por último perde o poder.\n\n✅ AÇÃO: Respire e confie no seu magnetismo. Ele vai voltar.\n\nSe você puxar assunto agora, ele vai relaxar.",
-                tip: "O silêncio estratégico é uma das armas mais poderosas."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "🤔",
-                question: "Ele perguntou: 'Você sente minha falta?'",
-                answer: "✅ RESPOSTA MAGNÉTICA:\n\n'Tivemos bons momentos mesmo. E você, como anda?'\n\n🎯 Reconheça o passado sem se comprometer emocionalmente. Devolva a pergunta para ele.",
-                tip: "Nunca entregue suas cartas. Mantenha o mistério."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "😴",
-                question: "Ele só me procura de madrugada",
-                answer: "🚨 SINAL VERMELHO!\n\n❌ Ele não te vê como prioridade. É carência ou conveniência.\n\n✅ AÇÃO: PARE de responder nesses horários. Use o Script do Não:\n\n'Opa, já tô pra dormir! Amanhã a gente conversa. Boa noite! 😴'",
-                tip: "Ensine-o a te procurar no 'horário comercial'."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "📸",
-                question: "Ele mandou um meme ou foto aleatória",
-                answer: "✅ RESPOSTA CURTA:\n\n'Haha, boa 😄' ou apenas reaja com emoji\n\n❌ NÃO conte história longa\n❌ NÃO puxe assunto\n\n🎯 Investimento mínimo. Se ele quer conversa de verdade, ele precisa se esforçar mais.",
-                tip: "Espelhe 30% menos energia do que ele investe."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "💔",
-                question: "Ele pediu desculpas pelo que fez",
-                answer: "✅ RESPOSTA MADURA:\n\n'Eu entendo. Obrigada por reconhecer isso. Mudança leva tempo, né.'\n\n🎯 Aceite as desculpas, mas NÃO perdoe imediatamente.\n\nPalavras não bastam. Ele precisa provar com AÇÕES.",
-                tip: "Perdão prematuro = ele volta a relaxar. Faça-o trabalhar pela reconquista."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "❓",
-                question: "Ele perguntou: 'Você está saindo com alguém?'",
-                answer: "✅ RESPOSTA ESTRATÉGICA:\n\n'Estou focada em mim no momento.'\n\n🎯 Não confirme nem negue. Mantenha o mistério.\n\n❌ NUNCA diga: 'Não, ainda não superei você'",
-                tip: "Deixe-o imaginar. A incerteza mantém o interesse dele alto."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "⏰",
-                question: "Quanto tempo espero para responder?",
-                answer: "⏰ REGRA DE TEMPO:\n\n• Manhã/Tarde: espere 3-4 horas\n• Noite: responda só no dia seguinte\n• Ligação: não atenda. Mande mensagem depois\n\n🎯 Mostre que sua vida não gira em torno dele.",
-                tip: "Ansiedade saudável = ele valoriza cada resposta sua."
-            },
-            {
-                category: "📱 Ele Mandou Mensagem",
-                icon: "🎭",
-                question: "Ele está sendo muito gentil de repente",
-                answer: "🔍 OBSERVE COM ATENÇÃO:\n\n✅ Está consistente há 14 dias? → Pode ser genuíno\n❌ Mudou de repente? → Pode ser teste ou carência\n\n🎯 AÇÃO: Continue neutra. Não relaxe ainda. Use o Termômetro de Interesse para avaliar.",
-                tip: "Mudanças genuínas levam tempo. Comportamento esporádico = red flag."
-            },
+function renderCal(){
+  const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const today=new Date().getDay();
+  document.getElementById('calGrid').innerHTML=arcs.map((a,i)=>`
+    <div class="cal-day${i===today?' today':''}" onclick="selCalDay(${i})" style="${i===today?'border-color:'+a.border:''}">
+      <div class="cal-emoji">${a.emoji}</div>
+      <div class="cal-dn">${days[i]}</div>
+      <div class="cal-an">${a.name}</div>
+      <div class="cal-cor">${a.raio}</div>
+    </div>`).join('');
+  selCalDay(today);
+}
 
-            // CATEGORIA 2: O QUE ELE ESTÁ PENSANDO? (10 cards)
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "🟢",
-                question: "Ele faz perguntas sobre meu dia e projetos",
-                answer: "🟢 SINAL VERDE!\n\nInteresse Genuíno. Ele está tentando se reinserir na sua vida.\n\n✅ AÇÃO: Responda com entusiasmo, mas sem se alongar. Devolva a pergunta:\n\n'Meu dia foi ótimo! E o seu, como foi?'",
-                tip: "Ele está investindo tempo e atenção. Continue observando a consistência."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "👁️",
-                question: "Ele visualiza meus stories mas não responde",
-                answer: "🟡 CURIOSIDADE PASSIVA\n\nEle está te observando à distância, mas sem coragem ou interesse suficiente para agir.\n\n✅ AÇÃO: Pare de mandar mensagens. Foque em postar stories onde você está feliz e ocupada. Deixe-o sentir o vácuo.",
-                tip: "Vigilância não é investimento. Ignore e continue sua vida magnética."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "📅",
-                question: "Ele fala sobre planos futuros comigo",
-                answer: "🟢 SINAL VERDE FORTE!\n\n'Quando a gente se encontrar...'\n'No mês que vem poderíamos...'\n\n✅ Ele está se projetando no futuro com você. Isso indica comprometimento genuíno.\n\n🎯 Continue avançando no Protocolo.",
-                tip: "Homens comprometidos incluem você naturalmente nos planos deles."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "💬",
-                question: "Ele responde com uma palavra só",
-                answer: "🔴 SINAL VERMELHO!\n\nBaixo investimento. Ele não está interessado o suficiente.\n\n✅ AÇÃO: Pare de puxar conversa. Se ele não investir energia, você também não investe.\n\nSilêncio estratégico: deixe-o sentir sua falta.",
-                tip: "Não seja você quem mantém a conversa viva sozinha."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "🎯",
-                question: "Ele é consistente há 2 semanas",
-                answer: "🟢 SINAL VERDE CONFIRMADO!\n\nConsistência = Interesse Genuíno\n\nSe ele mantém o ritmo por 14 dias:\n✅ Responde regularmente\n✅ Toma iniciativa\n✅ Faz perguntas profundas\n\n🎯 Você pode avançar para o próximo nível do Protocolo.",
-                tip: "A Regra dos 14 Dias: interesse real se mantém. Curiosidade some."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "🌙",
-                question: "Ele some por dias e volta como se nada fosse",
-                answer: "🔴 RED FLAG!\n\nInconsistência = Falta de Compromisso\n\n✅ AÇÃO: Quando ele voltar, não aja como se estivesse esperando. Responda neutra e breve. Não explique sua ausência.\n\nScript: 'Oi! Tudo certo por aí?'",
-                tip: "Não normalize o comportamento fantasma. Mantenha seu valor alto."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "💭",
-                question: "Ele evita falar sobre 'nós' ou o futuro",
-                answer: "🔴 SINAL DE ALERTA!\n\nEle está na fase de teste, sem querer compromisso.\n\n✅ AÇÃO: Não force. Não pergunte 'o que somos?'. Continue o Protocolo e observe se o comportamento muda em 2 semanas.\n\nSe não mudar = recue.",
-                tip: "Homens prontos para compromisso falam sobre futuro naturalmente."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "📞",
-                question: "Ele liga em vez de só mandar mensagem",
-                answer: "🟢 EXCELENTE SINAL!\n\nLigação = Alto Investimento de Tempo\n\nEle está disposto a te dar atenção de verdade, não só textos rápidos.\n\n✅ AÇÃO: Nem sempre atenda de primeira. Às vezes retorne a ligação em 1-2h. Mostre que você tem compromissos.",
-                tip: "Ligações indicam interesse mais sério do que apenas mensagens."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "🎁",
-                question: "Ele se lembra de coisas que eu mencionei",
-                answer: "🟢 SINAL VERDE!\n\n'Lembra daquilo que você falou sobre...'\n\nEle está prestando ATENÇÃO de verdade. Isso demonstra investimento emocional genuíno.\n\n✅ Continue observando outros sinais para confirmar o interesse completo.",
-                tip: "Atenção aos detalhes = ele se importa com você."
-            },
-            {
-                category: "🔍 O Que Ele Está Pensando?",
-                icon: "🚫",
-                question: "Ele não quer que eu poste fotos nas redes",
-                answer: "🔴 RED FLAG SÉRIA!\n\nControle disfarçado de 'ciúmes'\n\n✅ AÇÃO: NÃO aceite. Responda:\n\n'Eu posto o que eu quiser. Se isso te incomoda, precisamos conversar sobre limites saudáveis.'\n\n🚨 Controle não é amor.",
-                tip: "Ciúmes saudável ≠ controle. Proteja sua liberdade."
-            },
+function selCalDay(i){
+  const a=arcs[i];
+  const days=['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado'];
+  const today=new Date().getDay();
+  document.getElementById('calDetail').innerHTML=`
+    <div class="cal-detail">
+      <div class="cal-detail-header" style="display:flex;align-items:center;gap:12px;margin-bottom:1rem">
+        <div class="detail-dot" style="background:${a.bg};width:46px;height:46px;font-size:24px">${a.emoji}</div>
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <span style="font-size:16px;font-weight:600">${days[i]} — Arcanjo ${a.name}</span>
+            ${i===today?'<span class="today-badge">Hoje</span>':''}
+          </div>
+          <div style="font-size:13px;color:#888">Raio ${a.raio} · ${a.virtue}</div>
+        </div>
+      </div>
+      <p style="font-size:14px;color:#333;line-height:1.75;margin-bottom:1rem">${a.desc}</p>
+      <div style="background:#f8f8f6;border-radius:10px;padding:1rem;margin-bottom:.75rem">
+        <div style="font-size:11px;font-weight:600;color:#999;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem">Afirmação do dia</div>
+        <div style="font-size:13px;color:#333;line-height:1.8;font-style:italic">${a.afirmacao}</div>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px">${a.virtudes.map(v=>`<span class="vtag" style="background:${a.bg};border-color:${a.bg};color:${a.text}">${v}</span>`).join('')}</div>
+    </div>`;
+}
 
-            // CATEGORIA 3: SOCORRO, ESTOU SURTANDO! (10 cards)
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "📱",
-                question: "Vontade LOUCA de stalkear o Instagram dele",
-                answer: "🛑 PARE AGORA!\n\n✅ AÇÃO DE EMERGÊNCIA:\n1. Respire fundo 3x\n2. Feche o Instagram\n3. Abra este Oráculo em vez\n4. Lembre: Stalkear alimenta a ansiedade\n\n💜 Você está no controle. Não dê seu poder para a curiosidade.",
-                tip: "Cada vez que você resiste ao stalking, você fica mais forte."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "💔",
-                question: "Pensamento tóxico: 'Ele deve estar com outra'",
-                answer: "🌟 PIVOT MENTAL:\n\n1. Reconheça o medo: 'Estou com medo'\n2. Respire profundamente\n3. Substitua por: 'O que ele faz não define meu valor. Eu sou completa e magnética por mim mesma.'\n\n💜 Seu foco está em VOCÊ, não nele.",
-                tip: "Pensamentos tóxicos são normais. Escolha não alimentá-los."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "😱",
-                question: "Medo de estragar tudo de novo",
-                answer: "💎 AFIRMAÇÃO DE PODER:\n\n'Eu não estrago nada. Eu conduzo a dança. Eu tenho o Protocolo. Eu sei exatamente o que fazer. Eu confio no meu poder.'\n\n✅ Repita 3x em voz alta quando o medo vier.",
-                tip: "Você não é a mesma mulher de antes. Você evoluiu."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "⏰",
-                question: "Ele não respondeu há 2 horas e estou surtando",
-                answer: "🧘‍♀️ RESPIRE!\n\n2 horas não é nada. Ele tem uma vida também.\n\n✅ AÇÃO:\n1. Feche o WhatsApp\n2. Faça algo para VOCÊ (série, exercício, amiga)\n3. Confie que se for importante, ele responde\n\n💜 Você não persegue. Você atrai.",
-                tip: "Ansiedade por resposta rápida = energia de desespero. Corte isso."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "💭",
-                question: "Fico repassando as conversas na cabeça",
-                answer: "🛑 PARE O LOOP MENTAL!\n\n✅ TÉCNICA DO RESET:\n1. Escreva os pensamentos no papel\n2. Amasse e jogue fora\n3. Afirme: 'Eu libero o passado. Estou presente agora.'\n\n💜 Ruminação mental só te enfraquece.",
-                tip: "Cada vez que voltar ao loop, faça 10 respirações profundas."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "😔",
-                question: "Estou me sentindo carente e fraca",
-                answer: "💜 RECONEXÃO COM SEU PODER:\n\n✅ RITUAL IMEDIATO:\n1. Olhe no espelho\n2. Diga: 'Eu sou completa. Eu sou forte. Eu sou magnética.'\n3. Liste 3 coisas incríveis sobre você\n\n🌟 Carência é temporária. Seu poder é permanente.",
-                tip: "Carência vem quando você esquece quem você é. Lembre-se."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "📲",
-                question: "Vontade de mandar mensagem desesperada",
-                answer: "🚨 NÃO MANDE!\n\n✅ ANTES DE ENVIAR:\n1. Escreva a mensagem no bloco de notas\n2. Espere 2 horas\n3. Releia\n4. Se ainda fizer sentido E for estratégica, mande\n\n💜 99% das vezes você vai apagar.",
-                tip: "Mensagens escritas na emoção quase sempre são um erro."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "🌀",
-                question: "Sinto que vou perder o controle",
-                answer: "🧘‍♀️ TÉCNICA 5-4-3-2-1:\n\nDiga em voz alta:\n• 5 coisas que você VÊ\n• 4 coisas que você TOCA\n• 3 coisas que você OUVE\n• 2 coisas que você CHEIRA\n• 1 coisa que você SABOREIA\n\n💜 Isso te traz de volta ao presente.",
-                tip: "Ansiedade é sobre futuro. Presente é sobre poder."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "😭",
-                question: "Estou chorando e não consigo parar",
-                answer: "💜 PERMITA-SE SENTIR:\n\nChorar não é fraqueza. É liberação.\n\n✅ APÓS CHORAR:\n1. Lave o rosto\n2. Beba água\n3. Afirme: 'Eu liberei. Agora volto ao meu poder.'\n\n🌟 Você pode sentir E ser forte ao mesmo tempo.",
-                tip: "Emoções são ondas. Elas vêm, você sente, e elas vão."
-            },
-            {
-                category: "😰 Socorro, Estou Surtando!",
-                icon: "🔄",
-                question: "Estou voltando aos padrões antigos",
-                answer: "⚠️ ALERTA CONSCIENTE!\n\nVocê PERCEBEU. Isso já é 50% da vitória.\n\n✅ RESET IMEDIATO:\n1. Respire\n2. Releia o Capítulo 1 do Protocolo\n3. Lembre POR QUE você começou\n\n💜 Recaídas fazem parte. Voltar ao caminho é que importa.",
-                tip: "Consciência do erro = você já está se corrigindo."
-            },
-
-            // CATEGORIA 4: O QUE EU RESPONDO? (10 cards)
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "✉️",
-                question: "Como responder 'estava pensando em você'",
-                answer: "✅ SCRIPT MAGNÉTICO:\n\n'Que legal! Espero que esteja tudo bem por aí. 😊'\n\n🎯 Tom: Leve, neutro, sem entregar emoção.\n\nNÃO diga: 'Também estava pensando em você!'",
-                tip: "Reconheça a mensagem sem se comprometer emocionalmente."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "🍽️",
-                question: "Ele quer marcar jantar hoje",
-                answer: "✅ SCRIPT DO NÃO PODEROSO:\n\n'Hoje não vai dar! Mas podemos combinar outro dia com calma. Que tal semana que vem?'\n\n🎯 Nunca cancele seus planos por ele. Mostre que você tem agenda.",
-                tip: "Disponibilidade excessiva = desvalorização. Seja seletiva."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "❓",
-                question: "Ele perguntou: 'Por que terminou?'",
-                answer: "✅ SCRIPT MADURO:\n\n'Acho que foi o que precisava acontecer naquele momento. Mas prefiro focar no presente. Como você está?'\n\n🎯 Não reviva o passado. Redirecione para o agora.",
-                tip: "Reabrir feridas não reconstrói nada. Foque no presente."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "🏠",
-                question: "Ele quer vir na minha casa / me chamar pra casa dele",
-                answer: "✅ SCRIPT DE PROTEÇÃO:\n\n'Prefiro a gente se encontrar num lugar público primeiro. Que tal um café/drink?'\n\n🎯 Reconexão física antes da emocional = erro fatal. Vá devagar.",
-                tip: "Casa = intimidade precoce = ele relaxa e para de conquistar."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "💬",
-                question: "Como encerrar uma conversa no auge",
-                answer: "✅ SAÍDAS ESTRATÉGICAS:\n\n'Ai, preciso correr aqui! Depois a gente conversa. 😊'\n\n'Vou ter que ir, mas foi bom trocar ideia!'\n\n🎯 Sempre termine ANTES dele querer terminar.",
-                tip: "Quem encerra primeiro deixa o outro com vontade de mais."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "🤷‍♀️",
-                question: "Ele pergunta: 'O que você quer de mim?'",
-                answer: "✅ SCRIPT DE PODER:\n\n'Quero conhecer a versão atual de você. Sem pressa, sem pressão. Vamos ver no que dá.'\n\n🎯 Não defina o relacionamento antes da hora. Deixe fluir.",
-                tip: "Quem pressiona por definição geralmente perde. Seja misteriosa."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "🕐",
-                question: "Como recusar convite de última hora",
-                answer: "✅ SCRIPT FIRME MAS GENTIL:\n\n'Nossa, adoraria, mas já tenho compromisso! Da próxima vez me avisa com antecedência que eu me organizo. 😊'\n\n🎯 Ensine-o a te valorizar planejando com antecedência.",
-                tip: "Você não é opção de última hora. Você é prioridade."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "📸",
-                question: "Ele comentou algo sobre minha foto",
-                answer: "✅ RESPOSTA LEVE:\n\n'Obrigada! 😊' + emoji\n\nOU\n\n'Valeu! ✨'\n\n🎯 Curto, gentil, sem prolongar. Não explique a foto nem puxe assunto.\n\n❌ NÃO: 'Aaah obrigada! Tirei hoje porque...'",
-                tip: "Agradecimento simples mantém o mistério e o poder."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "💭",
-                question: "Ele está sendo vago sobre encontro",
-                answer: "✅ SCRIPT DE CORTE:\n\n'Quando tiver data e hora definidas, me avisa! Por hora vou tocando minha vida aqui. 😊'\n\n🎯 Não aceite 'vamos ver', 'qualquer dia'. Exija compromisso concreto.",
-                tip: "Homem interessado marca data e hora. Vago = desinteresse."
-            },
-            {
-                category: "💬 O Que Eu Respondo?",
-                icon: "🎭",
-                question: "Como ser misteriosa sem ser grossa",
-                answer: "✅ FÓRMULA DO MISTÉRIO:\n\nResposta = Info básica + Pergunta para ele\n\nEle: 'O que você fez hoje?'\nVocê: 'Dia produtivo! E o seu, como foi?'\n\n🎯 Sempre responda menos e devolva a bola.",
-                tip: "Mistério = falar 30% menos que ele e sempre devolver perguntas."
-            },
-
-            // CATEGORIA 5: PRECISO DE FORÇA INTERIOR (10 cards)
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "👑",
-                question: "Quando você se sentir carente",
-                answer: "💜 AFIRMAÇÃO:\n\n'Eu não PRECISO dele.\nEu o ESCOLHO.\n\nMinha felicidade não depende da atenção dele.\n\nEu sou COMPLETA.'\n\n✨ Repita até sentir a verdade dessas palavras.",
-                tip: "Necessidade vs. Escolha: essa é a diferença entre carência e poder."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "✨",
-                question: "Quando você duvidar do seu poder",
-                answer: "💎 AFIRMAÇÃO:\n\n'Minha energia é IRRESISTÍVEL.\n\nEu sou um ímã para o amor e a atenção que eu mereço.\n\nEle é ATRAÍDO por mim naturalmente.'\n\n✨ Diga olhando no espelho.",
-                tip: "Seu magnetismo não depende das ações dele. É quem você É."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "🌙",
-                question: "Para antes de dormir",
-                answer: "🌟 RITUAL NOTURNO:\n\n'Eu confio no processo.\n\nO universo está reorganizando tudo a meu favor.\n\nEu durmo em paz, sabendo que tudo já deu certo.'\n\n💜 Respire fundo 3x e durma tranquila.",
-                tip: "O que você decreta antes de dormir programa seu subconsciente."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "🦋",
-                question: "Para começar o dia",
-                answer: "☀️ DECRETO MATINAL:\n\n'Hoje eu escolho MEU PODER.\n\nEu sou MAGNÉTICA.\nEu sou CONFIANTE.\nEu sou IRRESISTÍVEL.\n\nMinha energia atrai tudo que é meu por direito.'\n\n✨ Diga em voz alta ao acordar.",
-                tip: "Como você começa o dia determina sua energia para tudo."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "🔥",
-                question: "Quando ele te decepcionar",
-                answer: "💪 AFIRMAÇÃO DE FORÇA:\n\n'Eu não aceito MIGALHAS.\n\nEu mereço o melhor ou NADA.\n\nSe ele não me valoriza, o PROBLEMA É DELE, não meu.'\n\n👑 Lembre-se do seu valor.",
-                tip: "Nunca baixe seus padrões por medo de ficar sozinha."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "💫",
-                question: "Para momentos de solidão",
-                answer: "🌟 RECONEXÃO:\n\n'Sozinha não significa ABANDONADA.\n\nEu sou minha própria companhia favorita.\n\nMinha paz interior não depende de ninguém.'\n\n💜 Abrace sua própria presença.",
-                tip: "Mulher que se basta = mulher irresistível."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "🎯",
-                question: "Antes de responder a mensagem dele",
-                answer: "🧘‍♀️ PAUSA CONSCIENTE:\n\n'Eu respondo da minha ESTRATÉGIA, não da minha emoção.\n\nEu tenho o CONTROLE.\n\nEu escolho o TOM e o TEMPO.'\n\n✨ Respire. Depois responda.",
-                tip: "Resposta emocional = perda de poder. Resposta estratégica = vitória."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "🌹",
-                question: "Para aumentar seu amor próprio",
-                answer: "💗 AMOR PRÓPRIO:\n\n'Eu me AMO incondicionalmente.\n\nMeu valor não está à venda.\n\nEu sou SUFICIENTE, completa e perfeita como sou.'\n\n👑 Você é a prioridade número 1.",
-                tip: "Quando você se ama de verdade, você nunca aceita menos do que merece."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "⚡",
-                question: "Quando sentir vontade de desistir",
-                answer: "💪 RESILIÊNCIA:\n\n'Eu não desisto.\nEu AJUSTO a estratégia.\n\nEu tenho o PROTOCOLO.\nEu tenho o PODER.\n\nEu SOU VITORIOSA.'\n\n🔥 Você já chegou longe demais para desistir.",
-                tip: "Desistir = voltar ao ciclo de dor. Persistir = transformação completa."
-            },
-            {
-                category: "💎 Preciso de Força Interior",
-                icon: "👸",
-                question: "Mantra diário de consolidação",
-                answer: "👑 DECRETO FINAL:\n\n'Eu sou a RAINHA da minha vida.\n\nEle precisa PROVAR que merece estar no meu reino.\n\nEu conduzo a dança.\nEu mantenho o poder.\n\nEU SOU IMBATÍVEL.'\n\n💜 Este é o seu mantra.",
-                tip: "Repita todos os dias. Você é a protagonista desta história."
-            }
-        ];
-
-        let currentCategory = null;
-        let currentCardIndex = 0;
-        let isFlipped = false;
-
-        function selectCategory(categoryIndex) {
-            currentCategory = categoryIndex;
-            drawFromCurrentCategory();
-            showCardSection();
-        }
-
-        function drawRandomCard() {
-            currentCategory = null;
-            currentCardIndex = Math.floor(Math.random() * flashcards.length);
-            updateCardContent();
-            showCardSection();
-        }
-
-        function drawFromCurrentCategory() {
-            if (isFlipped) {
-                flipCard();
-            }
-
-            setTimeout(() => {
-                if (currentCategory !== null) {
-                    const categoryCards = flashcards.filter((card, index) => {
-                        return Math.floor(index / 10) === currentCategory;
-                    });
-                    const randomIndex = Math.floor(Math.random() * categoryCards.length);
-                    const selectedCard = categoryCards[randomIndex];
-                    currentCardIndex = flashcards.indexOf(selectedCard);
-                } else {
-                    currentCardIndex = Math.floor(Math.random() * flashcards.length);
-                }
-                updateCardContent();
-            }, isFlipped ? 300 : 0);
-        }
-
-        function updateCardContent() {
-            const card = flashcards[currentCardIndex];
-            
-            document.getElementById('category-front').textContent = card.category;
-            document.getElementById('category-back').textContent = card.category;
-            document.getElementById('icon-front').textContent = card.icon;
-            document.getElementById('question').textContent = card.question;
-            document.getElementById('answer').textContent = card.answer;
-            document.getElementById('tip').textContent = '💡 ' + card.tip;
-            
-            const categoryName = currentCategory !== null ? 
-                ['Ele Mandou Mensagem', 'O Que Ele Está Pensando', 'Socorro, Estou Surtando', 'O Que Eu Respondo', 'Preciso de Força Interior'][currentCategory] : 
-                'Aleatório';
-            
-            document.getElementById('counter').textContent = `Categoria: ${categoryName} | Card ${currentCardIndex + 1} de ${flashcards.length}`;
-        }
-
-        function flipCard() {
-            const card = document.getElementById('flashcard');
-            card.classList.toggle('flipped');
-            isFlipped = !isFlipped;
-        }
-
-        function showCardSection() {
-            document.getElementById('menu').style.display = 'none';
-            document.getElementById('card-section').classList.add('active');
-            if (isFlipped) {
-                flipCard();
-            }
-        }
-
-        function backToMenu() {
-            document.getElementById('menu').style.display = 'flex';
-            document.getElementById('card-section').classList.remove('active');
-            currentCategory = null;
-        }
-    </script>
+renderGrid();
+renderDetail();
+renderCal();
+</script>
 </body>
 </html>
