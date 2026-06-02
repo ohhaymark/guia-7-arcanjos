@@ -3,7 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conexão com os 7 Arcanjos</title>
+<title>7 Arcanjos</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🪽</text></svg>">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="7 Arcanjos">
+<meta name="application-name" content="7 Arcanjos">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#faf9f7;color:#1a1a1a;min-height:100vh}
@@ -250,6 +255,23 @@ function selCalDay(i){
 renderGrid();
 renderDetail();
 renderCal();
+
+// Gera apple-touch-icon dinamicamente para salvar na tela inicial do iOS
+(function(){
+  const c=document.createElement('canvas');
+  c.width=180;c.height=180;
+  const ctx=c.getContext('2d');
+  ctx.fillStyle='#1a1a1a';
+  ctx.fillRect(0,0,180,180);
+  ctx.font='110px serif';
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  ctx.fillText('🪽',90,95);
+  const l=document.createElement('link');
+  l.rel='apple-touch-icon';
+  l.href=c.toDataURL('image/png');
+  document.head.appendChild(l);
+})();
 </script>
 </body>
 </html>
