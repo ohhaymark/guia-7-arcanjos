@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>O Oráculo da Mulher Magnética</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Segoe UI', serif;
+            background: linear-gradient(135deg, #6b2f6b 0%, #9d4edd 50%, #d4a574 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            color: white;
+            overflow: auto;
+        }
+
+        .container {
+            max-width: 480px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .header {
+            margin-bottom: 20px;
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            line-height: 1.2;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        /* MENU DE CATEGORIAS */
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .menu-intro {
+            font-size: 18px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .category-btn {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 14px 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .category-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .category-icon {
+            font-size: 28px;
+            min-width: 35px;
+        }
+
+        .category-text {
+            flex: 1;
+        }
+
+        .category-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .category-desc {
+            font-size: 11px;
+            opacity: 0.8;
+            line-height: 1.3;
+        }
+
+        .random-btn {
+            background: linear-gradient(135deg, #d4a574 0%, #f4c794 100%);
+            color: #6b2f6b;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 8px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .random-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
+        }
+
+        /* CARD DISPLAY */
+        .card-section {
+            display: none;
+        }
+
+        .card-section.active {
+            display: block;
+        }
+
+        .card-container {
+            perspective: 1000px;
+            margin: 20px 0;
+            min-height: 480px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 380px;
+            height: 520px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+        }
+
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            padding: 35px 25px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(245, 240, 250, 0.95) 100%);
+            color: #6b2f6b;
+        }
+
+        .card-back {
+            background: linear-gradient(135deg, rgba(107, 47, 107, 0.95) 0%, rgba(157, 78, 221, 0.95) 100%);
+            color: white;
+            transform: rotateY(180deg);
+        }
+
+        .card-category {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            margin-bottom: 18px;
+            font-weight: 600;
+        }
+
+        .card-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .card-question {
+            font-size: 22px;
+            font-weight: bold;
+            line-height: 1.3;
+            margin-bottom: 18px;
+            text-align: center;
+        }
+
+        .card-answer {
+            font-size: 15px;
+            line-height: 1.55;
+            text-align: left;
+            white-space: pre-line;
+        }
+
+        .card-tip {
+            font-size: 12px;
+            margin-top: 18px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            font-style: italic;
+        }
+
+        .card-instruction {
+            font-size: 13px;
+            opacity: 0.6;
+            margin-top: 18px;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 18px;
+        }
+
+        .btn {
+            padding: 14px 28px;
+            font-size: 15px;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Georgia', serif;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #d4a574 0%, #f4c794 100%);
+            color: #6b2f6b;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .btn-back {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 13px;
+            padding: 11px 22px;
+        }
+
+        .counter {
+            margin-top: 12px;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        /* RODAPÉ */
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            opacity: 0.9;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+        }
+
+        .footer-text {
+            margin-bottom: 8px;
+            white-space: nowrap;
+        }
+
+        .footer-email {
+            font-size: 13px;
+            color: #f4c794;
+            font-weight: 600;
+        }
+
+        /* AJUSTES RESPONSIVOS */
+        @media (max-height: 750px) {
+            .header {
+                margin-bottom: 15px;
+            }
+            .title {
+                font-size: 24px;
+            }
+            .menu {
+                gap: 8px;
+                margin-top: 12px;
+            }
+            .menu-intro {
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            .category-btn {
+                padding: 12px 14px;
+            }
+            .category-icon {
+                font-size: 24px;
+            }
+            .category-title {
+                font-size: 15px;
+            }
+            .category-desc {
+                font-size: 10px;
+            }
+            .random-btn {
+                padding: 14px;
+                font-size: 15px;
+                margin-top: 6px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .title {
+                font-size: 24px;
+            }
+            .category-title {
+                font-size: 15px;
+            }
+            .card {
+                height: 480px;
+            }
+            .card-question {
+                font-size: 20px;
+            }
+            .card-answer {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-height: 650px) {
+            .title {
+                font-size: 22px;
+                margin-bottom: 6px;
+            }
+            .subtitle {
+                font-size: 12px;
+            }
+            .header {
+                margin-bottom: 10px;
+            }
+            .menu {
+                gap: 7px;
+                margin-top: 10px;
+            }
+            .menu-intro {
+                font-size: 15px;
+                margin-bottom: 8px;
+            }
+            .category-btn {
+                padding: 10px 12px;
+            }
+            .category-icon {
+                font-size: 22px;
+                min-width: 30px;
+            }
+            .category-title {
+                font-size: 14px;
+            }
+            .category-desc {
+                font-size: 10px;
+            }
+            .random-btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">🔮 O Oráculo da<br>Mulher Magnética</div>
+            <div class="subtitle">Consulte a Sabedoria nos Momentos de Dúvida</div>
+        </div>
+
+        <!-- MENU DE CATEGORIAS -->
+        <div id="menu" class="menu">
+            <div class="menu-intro">✨ Escolha Sua Consulta ✨</div>
+
+            <div class="category-btn" onclick="selectCategory(0)">
+                <div class="category-icon">📱</div>
+                <div class="category-text">
+                    <div class="category-title">Ele Mandou Mensagem</div>
+                    <div class="category-desc">O que fazer quando ele voltar a falar</div>
+                </div>
+            </div>
+
+            <div class="category-btn" onclick="selectCategory(1)">
+                <div class="category-icon">🔍</div>
+                <div class="category-text">
+                    <div class="category-title">O Que Ele Está Pensando?</div>
+                    <div class="category-desc">Decifrando os sinais de interesse</div>
+                </div>
+            </div>
+
+            <div class="category-btn" onclick="selectCategory(2)">
+                <div class="category-icon">😰</div>
+                <div class="category-text">
+                    <div class="category-title">Socorro, Estou Surtando!</div>
+                    <div class="category-desc">Controle emocional nos momentos difíceis</div>
+                </div>
+            </div>
+
+            <div class="category-btn" onclick="selectCategory(3)">
+                <div class="category-icon">💬</div>
+                <div class="category-text">
+                    <div class="category-title">O Que Eu Respondo?</div>
+                    <div class="category-desc">Scripts prontos para cada situação</div>
+                </div>
+            </div>
+
+            <div class="category-btn" onclick="selectCategory(4)">
+                <div class="category-icon">💎</div>
+                <div class="category-text">
+                    <div class="category-title">Preciso de Força Interior</div>
+                    <div class="category-desc">Afirmações de poder e magnetismo</div>
+                </div>
+            </div>
+
+            <button class="random-btn" onclick="drawRandomCard()">
+                🎲 Puxar Card Totalmente Aleatório
+            </button>
+        </div>
+
+        <!-- SEÇÃO DO CARD -->
+        <div id="card-section" class="card-section">
+            <div class="card-container">
+                <div class="card" id="flashcard" onclick="flipCard()">
+                    <div class="card-face card-front">
+                        <div class="card-category" id="category-front"></div>
+                        <div class="card-icon" id="icon-front"></div>
+                        <div class="card-question" id="question"></div>
+                        <div class="card-instruction">👆 Clique para revelar a resposta</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="card-category" id="category-back"></div>
+                        <div class="card-answer" id="answer"></div>
+                        <div class="card-tip" id="tip"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button class="btn btn-primary" onclick="drawFromCurrentCategory()">
+                    🎲 Outro Card Desta Categoria
+                </button>
+                <button class="btn btn-secondary" onclick="flipCard()">
+                    🔄 Virar Card
+                </button>
+                <button class="btn btn-back" onclick="backToMenu()">
+                    ← Voltar ao Menu
+                </button>
+            </div>
+
+            <div class="counter" id="counter"></div>
+        </div>
+
+        <!-- RODAPÉ -->
+        <div class="footer">
+            <div class="footer-text">O Código da Reconexão Emocional™ Desenvolvido por Aurora ☆ 2025</div>
+            <div class="footer-email">codigoreconexa@gmail.com</div>
+        </div>
+    </div>
+
+    <script>
+        const flashcards = [
+            // CATEGORIA 1: ELE MANDOU MENSAGEM (10 cards)
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "💬",
+                question: "Ele mandou 'oi, sumida'",
+                answer: "✅ RESPOSTA ESTRATÉGICA:\n\nEspere 3 horas no mínimo. Depois responda:\n\n'Oie, tudo bem? Correria por aqui, mas tô ótima! E você?'\n\n🎯 Tom: Leve, feliz, ocupada (não demonstre carência)",
+                tip: "Lembre-se: Quem responde rápido perde o poder. Mostre que você tem uma vida."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "🕐",
+                question: "Ele me chamou pra sair hoje à noite",
+                answer: "✅ SCRIPT DO 'NÃO' PODEROSO:\n\n'Adoraria, mas hoje não consigo! Quem sabe na próxima, se a gente combinar com mais calma? 😊'\n\n🎯 Nunca aceite de primeira. Mostre que você não está 100% disponível.",
+                tip: "Você tem uma agenda. Ele precisa se planejar para estar com você."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "💭",
+                question: "A conversa morreu. Devo puxar assunto?",
+                answer: "❌ NÃO!\n\nDeixe o vácuo agir. Quem encerra a conversa por último perde o poder.\n\n✅ AÇÃO: Respire e confie no seu magnetismo. Ele vai voltar.\n\nSe você puxar assunto agora, ele vai relaxar.",
+                tip: "O silêncio estratégico é uma das armas mais poderosas."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "🤔",
+                question: "Ele perguntou: 'Você sente minha falta?'",
+                answer: "✅ RESPOSTA MAGNÉTICA:\n\n'Tivemos bons momentos mesmo. E você, como anda?'\n\n🎯 Reconheça o passado sem se comprometer emocionalmente. Devolva a pergunta para ele.",
+                tip: "Nunca entregue suas cartas. Mantenha o mistério."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "😴",
+                question: "Ele só me procura de madrugada",
+                answer: "🚨 SINAL VERMELHO!\n\n❌ Ele não te vê como prioridade. É carência ou conveniência.\n\n✅ AÇÃO: PARE de responder nesses horários. Use o Script do Não:\n\n'Opa, já tô pra dormir! Amanhã a gente conversa. Boa noite! 😴'",
+                tip: "Ensine-o a te procurar no 'horário comercial'."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "📸",
+                question: "Ele mandou um meme ou foto aleatória",
+                answer: "✅ RESPOSTA CURTA:\n\n'Haha, boa 😄' ou apenas reaja com emoji\n\n❌ NÃO conte história longa\n❌ NÃO puxe assunto\n\n🎯 Investimento mínimo. Se ele quer conversa de verdade, ele precisa se esforçar mais.",
+                tip: "Espelhe 30% menos energia do que ele investe."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "💔",
+                question: "Ele pediu desculpas pelo que fez",
+                answer: "✅ RESPOSTA MADURA:\n\n'Eu entendo. Obrigada por reconhecer isso. Mudança leva tempo, né.'\n\n🎯 Aceite as desculpas, mas NÃO perdoe imediatamente.\n\nPalavras não bastam. Ele precisa provar com AÇÕES.",
+                tip: "Perdão prematuro = ele volta a relaxar. Faça-o trabalhar pela reconquista."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "❓",
+                question: "Ele perguntou: 'Você está saindo com alguém?'",
+                answer: "✅ RESPOSTA ESTRATÉGICA:\n\n'Estou focada em mim no momento.'\n\n🎯 Não confirme nem negue. Mantenha o mistério.\n\n❌ NUNCA diga: 'Não, ainda não superei você'",
+                tip: "Deixe-o imaginar. A incerteza mantém o interesse dele alto."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "⏰",
+                question: "Quanto tempo espero para responder?",
+                answer: "⏰ REGRA DE TEMPO:\n\n• Manhã/Tarde: espere 3-4 horas\n• Noite: responda só no dia seguinte\n• Ligação: não atenda. Mande mensagem depois\n\n🎯 Mostre que sua vida não gira em torno dele.",
+                tip: "Ansiedade saudável = ele valoriza cada resposta sua."
+            },
+            {
+                category: "📱 Ele Mandou Mensagem",
+                icon: "🎭",
+                question: "Ele está sendo muito gentil de repente",
+                answer: "🔍 OBSERVE COM ATENÇÃO:\n\n✅ Está consistente há 14 dias? → Pode ser genuíno\n❌ Mudou de repente? → Pode ser teste ou carência\n\n🎯 AÇÃO: Continue neutra. Não relaxe ainda. Use o Termômetro de Interesse para avaliar.",
+                tip: "Mudanças genuínas levam tempo. Comportamento esporádico = red flag."
+            },
+
+            // CATEGORIA 2: O QUE ELE ESTÁ PENSANDO? (10 cards)
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "🟢",
+                question: "Ele faz perguntas sobre meu dia e projetos",
+                answer: "🟢 SINAL VERDE!\n\nInteresse Genuíno. Ele está tentando se reinserir na sua vida.\n\n✅ AÇÃO: Responda com entusiasmo, mas sem se alongar. Devolva a pergunta:\n\n'Meu dia foi ótimo! E o seu, como foi?'",
+                tip: "Ele está investindo tempo e atenção. Continue observando a consistência."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "👁️",
+                question: "Ele visualiza meus stories mas não responde",
+                answer: "🟡 CURIOSIDADE PASSIVA\n\nEle está te observando à distância, mas sem coragem ou interesse suficiente para agir.\n\n✅ AÇÃO: Pare de mandar mensagens. Foque em postar stories onde você está feliz e ocupada. Deixe-o sentir o vácuo.",
+                tip: "Vigilância não é investimento. Ignore e continue sua vida magnética."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "📅",
+                question: "Ele fala sobre planos futuros comigo",
+                answer: "🟢 SINAL VERDE FORTE!\n\n'Quando a gente se encontrar...'\n'No mês que vem poderíamos...'\n\n✅ Ele está se projetando no futuro com você. Isso indica comprometimento genuíno.\n\n🎯 Continue avançando no Protocolo.",
+                tip: "Homens comprometidos incluem você naturalmente nos planos deles."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "💬",
+                question: "Ele responde com uma palavra só",
+                answer: "🔴 SINAL VERMELHO!\n\nBaixo investimento. Ele não está interessado o suficiente.\n\n✅ AÇÃO: Pare de puxar conversa. Se ele não investir energia, você também não investe.\n\nSilêncio estratégico: deixe-o sentir sua falta.",
+                tip: "Não seja você quem mantém a conversa viva sozinha."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "🎯",
+                question: "Ele é consistente há 2 semanas",
+                answer: "🟢 SINAL VERDE CONFIRMADO!\n\nConsistência = Interesse Genuíno\n\nSe ele mantém o ritmo por 14 dias:\n✅ Responde regularmente\n✅ Toma iniciativa\n✅ Faz perguntas profundas\n\n🎯 Você pode avançar para o próximo nível do Protocolo.",
+                tip: "A Regra dos 14 Dias: interesse real se mantém. Curiosidade some."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "🌙",
+                question: "Ele some por dias e volta como se nada fosse",
+                answer: "🔴 RED FLAG!\n\nInconsistência = Falta de Compromisso\n\n✅ AÇÃO: Quando ele voltar, não aja como se estivesse esperando. Responda neutra e breve. Não explique sua ausência.\n\nScript: 'Oi! Tudo certo por aí?'",
+                tip: "Não normalize o comportamento fantasma. Mantenha seu valor alto."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "💭",
+                question: "Ele evita falar sobre 'nós' ou o futuro",
+                answer: "🔴 SINAL DE ALERTA!\n\nEle está na fase de teste, sem querer compromisso.\n\n✅ AÇÃO: Não force. Não pergunte 'o que somos?'. Continue o Protocolo e observe se o comportamento muda em 2 semanas.\n\nSe não mudar = recue.",
+                tip: "Homens prontos para compromisso falam sobre futuro naturalmente."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "📞",
+                question: "Ele liga em vez de só mandar mensagem",
+                answer: "🟢 EXCELENTE SINAL!\n\nLigação = Alto Investimento de Tempo\n\nEle está disposto a te dar atenção de verdade, não só textos rápidos.\n\n✅ AÇÃO: Nem sempre atenda de primeira. Às vezes retorne a ligação em 1-2h. Mostre que você tem compromissos.",
+                tip: "Ligações indicam interesse mais sério do que apenas mensagens."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "🎁",
+                question: "Ele se lembra de coisas que eu mencionei",
+                answer: "🟢 SINAL VERDE!\n\n'Lembra daquilo que você falou sobre...'\n\nEle está prestando ATENÇÃO de verdade. Isso demonstra investimento emocional genuíno.\n\n✅ Continue observando outros sinais para confirmar o interesse completo.",
+                tip: "Atenção aos detalhes = ele se importa com você."
+            },
+            {
+                category: "🔍 O Que Ele Está Pensando?",
+                icon: "🚫",
+                question: "Ele não quer que eu poste fotos nas redes",
+                answer: "🔴 RED FLAG SÉRIA!\n\nControle disfarçado de 'ciúmes'\n\n✅ AÇÃO: NÃO aceite. Responda:\n\n'Eu posto o que eu quiser. Se isso te incomoda, precisamos conversar sobre limites saudáveis.'\n\n🚨 Controle não é amor.",
+                tip: "Ciúmes saudável ≠ controle. Proteja sua liberdade."
+            },
+
+            // CATEGORIA 3: SOCORRO, ESTOU SURTANDO! (10 cards)
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "📱",
+                question: "Vontade LOUCA de stalkear o Instagram dele",
+                answer: "🛑 PARE AGORA!\n\n✅ AÇÃO DE EMERGÊNCIA:\n1. Respire fundo 3x\n2. Feche o Instagram\n3. Abra este Oráculo em vez\n4. Lembre: Stalkear alimenta a ansiedade\n\n💜 Você está no controle. Não dê seu poder para a curiosidade.",
+                tip: "Cada vez que você resiste ao stalking, você fica mais forte."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "💔",
+                question: "Pensamento tóxico: 'Ele deve estar com outra'",
+                answer: "🌟 PIVOT MENTAL:\n\n1. Reconheça o medo: 'Estou com medo'\n2. Respire profundamente\n3. Substitua por: 'O que ele faz não define meu valor. Eu sou completa e magnética por mim mesma.'\n\n💜 Seu foco está em VOCÊ, não nele.",
+                tip: "Pensamentos tóxicos são normais. Escolha não alimentá-los."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "😱",
+                question: "Medo de estragar tudo de novo",
+                answer: "💎 AFIRMAÇÃO DE PODER:\n\n'Eu não estrago nada. Eu conduzo a dança. Eu tenho o Protocolo. Eu sei exatamente o que fazer. Eu confio no meu poder.'\n\n✅ Repita 3x em voz alta quando o medo vier.",
+                tip: "Você não é a mesma mulher de antes. Você evoluiu."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "⏰",
+                question: "Ele não respondeu há 2 horas e estou surtando",
+                answer: "🧘‍♀️ RESPIRE!\n\n2 horas não é nada. Ele tem uma vida também.\n\n✅ AÇÃO:\n1. Feche o WhatsApp\n2. Faça algo para VOCÊ (série, exercício, amiga)\n3. Confie que se for importante, ele responde\n\n💜 Você não persegue. Você atrai.",
+                tip: "Ansiedade por resposta rápida = energia de desespero. Corte isso."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "💭",
+                question: "Fico repassando as conversas na cabeça",
+                answer: "🛑 PARE O LOOP MENTAL!\n\n✅ TÉCNICA DO RESET:\n1. Escreva os pensamentos no papel\n2. Amasse e jogue fora\n3. Afirme: 'Eu libero o passado. Estou presente agora.'\n\n💜 Ruminação mental só te enfraquece.",
+                tip: "Cada vez que voltar ao loop, faça 10 respirações profundas."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "😔",
+                question: "Estou me sentindo carente e fraca",
+                answer: "💜 RECONEXÃO COM SEU PODER:\n\n✅ RITUAL IMEDIATO:\n1. Olhe no espelho\n2. Diga: 'Eu sou completa. Eu sou forte. Eu sou magnética.'\n3. Liste 3 coisas incríveis sobre você\n\n🌟 Carência é temporária. Seu poder é permanente.",
+                tip: "Carência vem quando você esquece quem você é. Lembre-se."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "📲",
+                question: "Vontade de mandar mensagem desesperada",
+                answer: "🚨 NÃO MANDE!\n\n✅ ANTES DE ENVIAR:\n1. Escreva a mensagem no bloco de notas\n2. Espere 2 horas\n3. Releia\n4. Se ainda fizer sentido E for estratégica, mande\n\n💜 99% das vezes você vai apagar.",
+                tip: "Mensagens escritas na emoção quase sempre são um erro."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "🌀",
+                question: "Sinto que vou perder o controle",
+                answer: "🧘‍♀️ TÉCNICA 5-4-3-2-1:\n\nDiga em voz alta:\n• 5 coisas que você VÊ\n• 4 coisas que você TOCA\n• 3 coisas que você OUVE\n• 2 coisas que você CHEIRA\n• 1 coisa que você SABOREIA\n\n💜 Isso te traz de volta ao presente.",
+                tip: "Ansiedade é sobre futuro. Presente é sobre poder."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "😭",
+                question: "Estou chorando e não consigo parar",
+                answer: "💜 PERMITA-SE SENTIR:\n\nChorar não é fraqueza. É liberação.\n\n✅ APÓS CHORAR:\n1. Lave o rosto\n2. Beba água\n3. Afirme: 'Eu liberei. Agora volto ao meu poder.'\n\n🌟 Você pode sentir E ser forte ao mesmo tempo.",
+                tip: "Emoções são ondas. Elas vêm, você sente, e elas vão."
+            },
+            {
+                category: "😰 Socorro, Estou Surtando!",
+                icon: "🔄",
+                question: "Estou voltando aos padrões antigos",
+                answer: "⚠️ ALERTA CONSCIENTE!\n\nVocê PERCEBEU. Isso já é 50% da vitória.\n\n✅ RESET IMEDIATO:\n1. Respire\n2. Releia o Capítulo 1 do Protocolo\n3. Lembre POR QUE você começou\n\n💜 Recaídas fazem parte. Voltar ao caminho é que importa.",
+                tip: "Consciência do erro = você já está se corrigindo."
+            },
+
+            // CATEGORIA 4: O QUE EU RESPONDO? (10 cards)
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "✉️",
+                question: "Como responder 'estava pensando em você'",
+                answer: "✅ SCRIPT MAGNÉTICO:\n\n'Que legal! Espero que esteja tudo bem por aí. 😊'\n\n🎯 Tom: Leve, neutro, sem entregar emoção.\n\nNÃO diga: 'Também estava pensando em você!'",
+                tip: "Reconheça a mensagem sem se comprometer emocionalmente."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "🍽️",
+                question: "Ele quer marcar jantar hoje",
+                answer: "✅ SCRIPT DO NÃO PODEROSO:\n\n'Hoje não vai dar! Mas podemos combinar outro dia com calma. Que tal semana que vem?'\n\n🎯 Nunca cancele seus planos por ele. Mostre que você tem agenda.",
+                tip: "Disponibilidade excessiva = desvalorização. Seja seletiva."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "❓",
+                question: "Ele perguntou: 'Por que terminou?'",
+                answer: "✅ SCRIPT MADURO:\n\n'Acho que foi o que precisava acontecer naquele momento. Mas prefiro focar no presente. Como você está?'\n\n🎯 Não reviva o passado. Redirecione para o agora.",
+                tip: "Reabrir feridas não reconstrói nada. Foque no presente."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "🏠",
+                question: "Ele quer vir na minha casa / me chamar pra casa dele",
+                answer: "✅ SCRIPT DE PROTEÇÃO:\n\n'Prefiro a gente se encontrar num lugar público primeiro. Que tal um café/drink?'\n\n🎯 Reconexão física antes da emocional = erro fatal. Vá devagar.",
+                tip: "Casa = intimidade precoce = ele relaxa e para de conquistar."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "💬",
+                question: "Como encerrar uma conversa no auge",
+                answer: "✅ SAÍDAS ESTRATÉGICAS:\n\n'Ai, preciso correr aqui! Depois a gente conversa. 😊'\n\n'Vou ter que ir, mas foi bom trocar ideia!'\n\n🎯 Sempre termine ANTES dele querer terminar.",
+                tip: "Quem encerra primeiro deixa o outro com vontade de mais."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "🤷‍♀️",
+                question: "Ele pergunta: 'O que você quer de mim?'",
+                answer: "✅ SCRIPT DE PODER:\n\n'Quero conhecer a versão atual de você. Sem pressa, sem pressão. Vamos ver no que dá.'\n\n🎯 Não defina o relacionamento antes da hora. Deixe fluir.",
+                tip: "Quem pressiona por definição geralmente perde. Seja misteriosa."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "🕐",
+                question: "Como recusar convite de última hora",
+                answer: "✅ SCRIPT FIRME MAS GENTIL:\n\n'Nossa, adoraria, mas já tenho compromisso! Da próxima vez me avisa com antecedência que eu me organizo. 😊'\n\n🎯 Ensine-o a te valorizar planejando com antecedência.",
+                tip: "Você não é opção de última hora. Você é prioridade."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "📸",
+                question: "Ele comentou algo sobre minha foto",
+                answer: "✅ RESPOSTA LEVE:\n\n'Obrigada! 😊' + emoji\n\nOU\n\n'Valeu! ✨'\n\n🎯 Curto, gentil, sem prolongar. Não explique a foto nem puxe assunto.\n\n❌ NÃO: 'Aaah obrigada! Tirei hoje porque...'",
+                tip: "Agradecimento simples mantém o mistério e o poder."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "💭",
+                question: "Ele está sendo vago sobre encontro",
+                answer: "✅ SCRIPT DE CORTE:\n\n'Quando tiver data e hora definidas, me avisa! Por hora vou tocando minha vida aqui. 😊'\n\n🎯 Não aceite 'vamos ver', 'qualquer dia'. Exija compromisso concreto.",
+                tip: "Homem interessado marca data e hora. Vago = desinteresse."
+            },
+            {
+                category: "💬 O Que Eu Respondo?",
+                icon: "🎭",
+                question: "Como ser misteriosa sem ser grossa",
+                answer: "✅ FÓRMULA DO MISTÉRIO:\n\nResposta = Info básica + Pergunta para ele\n\nEle: 'O que você fez hoje?'\nVocê: 'Dia produtivo! E o seu, como foi?'\n\n🎯 Sempre responda menos e devolva a bola.",
+                tip: "Mistério = falar 30% menos que ele e sempre devolver perguntas."
+            },
+
+            // CATEGORIA 5: PRECISO DE FORÇA INTERIOR (10 cards)
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "👑",
+                question: "Quando você se sentir carente",
+                answer: "💜 AFIRMAÇÃO:\n\n'Eu não PRECISO dele.\nEu o ESCOLHO.\n\nMinha felicidade não depende da atenção dele.\n\nEu sou COMPLETA.'\n\n✨ Repita até sentir a verdade dessas palavras.",
+                tip: "Necessidade vs. Escolha: essa é a diferença entre carência e poder."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "✨",
+                question: "Quando você duvidar do seu poder",
+                answer: "💎 AFIRMAÇÃO:\n\n'Minha energia é IRRESISTÍVEL.\n\nEu sou um ímã para o amor e a atenção que eu mereço.\n\nEle é ATRAÍDO por mim naturalmente.'\n\n✨ Diga olhando no espelho.",
+                tip: "Seu magnetismo não depende das ações dele. É quem você É."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "🌙",
+                question: "Para antes de dormir",
+                answer: "🌟 RITUAL NOTURNO:\n\n'Eu confio no processo.\n\nO universo está reorganizando tudo a meu favor.\n\nEu durmo em paz, sabendo que tudo já deu certo.'\n\n💜 Respire fundo 3x e durma tranquila.",
+                tip: "O que você decreta antes de dormir programa seu subconsciente."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "🦋",
+                question: "Para começar o dia",
+                answer: "☀️ DECRETO MATINAL:\n\n'Hoje eu escolho MEU PODER.\n\nEu sou MAGNÉTICA.\nEu sou CONFIANTE.\nEu sou IRRESISTÍVEL.\n\nMinha energia atrai tudo que é meu por direito.'\n\n✨ Diga em voz alta ao acordar.",
+                tip: "Como você começa o dia determina sua energia para tudo."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "🔥",
+                question: "Quando ele te decepcionar",
+                answer: "💪 AFIRMAÇÃO DE FORÇA:\n\n'Eu não aceito MIGALHAS.\n\nEu mereço o melhor ou NADA.\n\nSe ele não me valoriza, o PROBLEMA É DELE, não meu.'\n\n👑 Lembre-se do seu valor.",
+                tip: "Nunca baixe seus padrões por medo de ficar sozinha."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "💫",
+                question: "Para momentos de solidão",
+                answer: "🌟 RECONEXÃO:\n\n'Sozinha não significa ABANDONADA.\n\nEu sou minha própria companhia favorita.\n\nMinha paz interior não depende de ninguém.'\n\n💜 Abrace sua própria presença.",
+                tip: "Mulher que se basta = mulher irresistível."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "🎯",
+                question: "Antes de responder a mensagem dele",
+                answer: "🧘‍♀️ PAUSA CONSCIENTE:\n\n'Eu respondo da minha ESTRATÉGIA, não da minha emoção.\n\nEu tenho o CONTROLE.\n\nEu escolho o TOM e o TEMPO.'\n\n✨ Respire. Depois responda.",
+                tip: "Resposta emocional = perda de poder. Resposta estratégica = vitória."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "🌹",
+                question: "Para aumentar seu amor próprio",
+                answer: "💗 AMOR PRÓPRIO:\n\n'Eu me AMO incondicionalmente.\n\nMeu valor não está à venda.\n\nEu sou SUFICIENTE, completa e perfeita como sou.'\n\n👑 Você é a prioridade número 1.",
+                tip: "Quando você se ama de verdade, você nunca aceita menos do que merece."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "⚡",
+                question: "Quando sentir vontade de desistir",
+                answer: "💪 RESILIÊNCIA:\n\n'Eu não desisto.\nEu AJUSTO a estratégia.\n\nEu tenho o PROTOCOLO.\nEu tenho o PODER.\n\nEu SOU VITORIOSA.'\n\n🔥 Você já chegou longe demais para desistir.",
+                tip: "Desistir = voltar ao ciclo de dor. Persistir = transformação completa."
+            },
+            {
+                category: "💎 Preciso de Força Interior",
+                icon: "👸",
+                question: "Mantra diário de consolidação",
+                answer: "👑 DECRETO FINAL:\n\n'Eu sou a RAINHA da minha vida.\n\nEle precisa PROVAR que merece estar no meu reino.\n\nEu conduzo a dança.\nEu mantenho o poder.\n\nEU SOU IMBATÍVEL.'\n\n💜 Este é o seu mantra.",
+                tip: "Repita todos os dias. Você é a protagonista desta história."
+            }
+        ];
+
+        let currentCategory = null;
+        let currentCardIndex = 0;
+        let isFlipped = false;
+
+        function selectCategory(categoryIndex) {
+            currentCategory = categoryIndex;
+            drawFromCurrentCategory();
+            showCardSection();
+        }
+
+        function drawRandomCard() {
+            currentCategory = null;
+            currentCardIndex = Math.floor(Math.random() * flashcards.length);
+            updateCardContent();
+            showCardSection();
+        }
+
+        function drawFromCurrentCategory() {
+            if (isFlipped) {
+                flipCard();
+            }
+
+            setTimeout(() => {
+                if (currentCategory !== null) {
+                    const categoryCards = flashcards.filter((card, index) => {
+                        return Math.floor(index / 10) === currentCategory;
+                    });
+                    const randomIndex = Math.floor(Math.random() * categoryCards.length);
+                    const selectedCard = categoryCards[randomIndex];
+                    currentCardIndex = flashcards.indexOf(selectedCard);
+                } else {
+                    currentCardIndex = Math.floor(Math.random() * flashcards.length);
+                }
+                updateCardContent();
+            }, isFlipped ? 300 : 0);
+        }
+
+        function updateCardContent() {
+            const card = flashcards[currentCardIndex];
+            
+            document.getElementById('category-front').textContent = card.category;
+            document.getElementById('category-back').textContent = card.category;
+            document.getElementById('icon-front').textContent = card.icon;
+            document.getElementById('question').textContent = card.question;
+            document.getElementById('answer').textContent = card.answer;
+            document.getElementById('tip').textContent = '💡 ' + card.tip;
+            
+            const categoryName = currentCategory !== null ? 
+                ['Ele Mandou Mensagem', 'O Que Ele Está Pensando', 'Socorro, Estou Surtando', 'O Que Eu Respondo', 'Preciso de Força Interior'][currentCategory] : 
+                'Aleatório';
+            
+            document.getElementById('counter').textContent = `Categoria: ${categoryName} | Card ${currentCardIndex + 1} de ${flashcards.length}`;
+        }
+
+        function flipCard() {
+            const card = document.getElementById('flashcard');
+            card.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function showCardSection() {
+            document.getElementById('menu').style.display = 'none';
+            document.getElementById('card-section').classList.add('active');
+            if (isFlipped) {
+                flipCard();
+            }
+        }
+
+        function backToMenu() {
+            document.getElementById('menu').style.display = 'flex';
+            document.getElementById('card-section').classList.remove('active');
+            currentCategory = null;
+        }
+    </script>
+</body>
+</html>
